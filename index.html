@@ -1,12 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <title>旅遊就好網站</title>
+    <meta charset="UTF-8">
+    <title>旅遊就好首頁</title>
+
+    <!-- CSS 樣式 -->
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background-color: #f5f6fa;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 42px;
+        }
+
+        header p {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #222;
+            color: #aaa;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>旅遊就好網站</h1>
-  <p>這個網站是用 GitHub Pages 建立的。</p>
+
+    <!-- 頁首 -->
+    <header>
+        <h1>歡迎來到旅遊就好首頁</h1>
+        <p>這是一個用 HTML 製作的漂亮首頁</p>
+    </header>
+
+    <!-- 內容區 -->
+    <div class="container">
+
+        <div class="card">
+            <h2>關於我</h2>
+            <p>
+                這裡可以介紹你自己、你的網站、或你想分享的內容。
+                使用 HTML + CSS 就能做出乾淨又現代的排版。
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>推薦影片</h2>
+
+            <!-- YouTube 影片 -->
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 頁尾 -->
+    <footer>
+        © 2025 我的網站
+    </footer>
+
 </body>
 </html>
-
