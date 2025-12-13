@@ -115,31 +115,33 @@
             <div class="video-menu">
                 <h3>影片清單</h3>
 
-                <div class="video-item" onclick="playVideo('https://www.youtube.com/watch?v=c2ctgbsYoWE')">
-                    🎄 2023新北耶誕城
-                </div>
+                <div class="video-item" onclick="playVideo('c2ctgbsYoWE')">
+    🎄 2023新北耶誕城
+</div>
 
-                <div class="video-item" onclick="playVideo('https://www.youtube.com/watch?v=b5yp3OzCKXc')">
-                    ✨ 海洋生物
-                </div>
+<div class="video-item" onclick="playVideo('b5yp3OzCKXc')">
+    ✨ 海洋生物
+</div>
 
-                <div class="video-item" onclick="playVideo('https://www.youtube.com/watch?v=u-XgX6U4Ec0')">
-                    🎠 社子島
-                </div>
+<div class="video-item" onclick="playVideo('u-XgX6U4Ec0')">
+    🎠 社子島
+</div>
+
 
             </div>
 
             <!-- 右邊播放器 -->
-            <div class="video-player">
-                <div class="video-wrapper">
-                    <iframe
-                        id="youtubePlayer"
-                        src="https://www.youtube.com/embed/c2ctgbsYoWE"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
+<div class="video-player">
+    <div class="video-wrapper">
+        <iframe
+            id="youtubePlayer"
+            src="https://www.youtube.com/embed/c2ctgbsYoWE?autoplay=1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+</div>
+
 
         </div>
     </div>
@@ -153,9 +155,12 @@
 <script>
     function playVideo(videoId) {
         const player = document.getElementById("youtubePlayer");
-        player.src = "https://www.youtube.com/embed/" + videoId;
+
+        // 切換 YouTube 影片（加 autoplay 會自動播放）
+        player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     }
 </script>
+
 
 </body>
 </html>
