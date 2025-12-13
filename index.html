@@ -1,166 +1,179 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <title>旅遊就好首頁</title>
+<meta charset="UTF-8">
+<title>旅遊就好首頁</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background-color: #f5f6fa;
-            color: #333;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #f5f6fa;
+    color: #333;
+}
 
-        header {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: white;
-            padding: 50px 20px;
-            text-align: center;
-        }
+header {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    padding: 50px 20px;
+    text-align: center;
+}
 
-        header h1 {
-            margin: 0;
-            font-size: 42px;
-        }
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
 
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
 
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
-        }
+.video-layout {
+    display: flex;
+    gap: 20px;
+}
 
-        /* 影片區塊版型 */
-        .video-layout {
-            display: flex;
-            gap: 20px;
-        }
+/* 📱 手機版上下排列 */
+@media (max-width: 768px) {
+    .video-layout {
+        flex-direction: column;
+    }
+}
 
-        /* 左邊選單 */
-        .video-menu {
-            width: 280px;
-            border-right: 1px solid #eee;
-        }
+.video-menu {
+    width: 280px;
+}
 
-        .video-menu h3 {
-            margin-top: 0;
-        }
+.video-item {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
 
-        .video-item {
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            transition: 0.2s;
-        }
+/* ▶ 目前播放反白 */
+.video-item.active {
+    background: #2575fc;
+    color: white;
+    font-weight: bold;
+}
 
-        .video-item:hover {
-            background: #eef3ff;
-        }
+.video-player {
+    flex: 1;
+}
 
-        /* 右邊播放器 */
-        .video-player {
-            flex: 1;
-        }
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+}
 
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 12px;
-        }
+.video-wrapper iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
 
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #222;
-            color: #aaa;
-        }
-    </style>
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #222;
+    color: #aaa;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-    <h1>旅遊就好</h1>
-    <p>新北耶誕城影片集</p>
+<h1>旅遊就好</h1>
+<p>新北耶誕城影片集</p>
 </header>
 
 <div class="container">
+<div class="card">
 
-    <div class="card">
-        <h2>推薦影片</h2>
+<div class="video-layout">
 
-        <div class="video-layout">
-
-            <!-- 左邊影片選單 -->
-            <div class="video-menu">
-                <h3>影片清單</h3>
-
-                <div class="video-item" onclick="playVideo('c2ctgbsYoWE')">
-    🎄 2023新北耶誕城
+<!-- 左邊清單 -->
+<div class="video-menu">
+<div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
+<div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
+<div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
 </div>
 
-<div class="video-item" onclick="playVideo('b5yp3OzCKXc')">
-    ✨ 海洋生物
-</div>
-
-<div class="video-item" onclick="playVideo('u-XgX6U4Ec0')">
-    🎠 社子島
-</div>
-
-
-            </div>
-
-            <!-- 右邊播放器 -->
+<!-- 播放器 -->
 <div class="video-player">
-    <div class="video-wrapper">
-        <iframe
-            id="youtubePlayer"
-            src="https://www.youtube.com/embed/c2ctgbsYoWE?autoplay=1"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
+<div class="video-wrapper">
+<iframe
+    id="youtubePlayer"
+    src="https://www.youtube.com/embed/c2ctgbsYoWE?autoplay=1&mute=1&enablejsapi=1"
+    allow="autoplay; encrypted-media"
+    allowfullscreen>
+</iframe>
+</div>
 </div>
 
-
-        </div>
-    </div>
-
+</div>
+</div>
 </div>
 
-<footer>
-    © 2025 旅遊就好. All rights reserved.
-</footer>
+<footer>© 2025 旅遊就好. All rights reserved.</footer>
 
 <script>
-    function playVideo(videoId) {
-        const player = document.getElementById("youtubePlayer");
+const videos = document.querySelectorAll(".video-item");
+let currentIndex = 0;
+let player;
 
-        // 切換 YouTube 影片（加 autoplay 會自動播放）
-        player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-    }
+/* ▶ 點擊切換影片 */
+videos.forEach((item, index) => {
+    item.addEventListener("click", () => {
+        playVideo(index, true);
+    });
+});
+
+/* ▶ 播放影片 */
+function playVideo(index, userClick = false) {
+    currentIndex = index;
+    const videoId = videos[index].dataset.id;
+
+    document.getElementById("youtubePlayer").src =
+        `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${userClick ? 0 : 1}&enablejsapi=1`;
+
+    videos.forEach(v => v.classList.remove("active"));
+    videos[index].classList.add("active");
+}
+
+/* ▶ YouTube API（監聽播完） */
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('youtubePlayer', {
+        events: {
+            onStateChange: (event) => {
+                if (event.data === YT.PlayerState.ENDED) {
+                    playNext();
+                }
+            }
+        }
+    });
+}
+
+/* ▶ 播完播下一支 */
+function playNext() {
+    let next = currentIndex + 1;
+    if (next >= videos.length) next = 0;
+    playVideo(next);
+}
+
+/* 載入 API */
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
 </script>
-
 
 </body>
 </html>
