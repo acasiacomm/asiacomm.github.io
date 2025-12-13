@@ -15,7 +15,7 @@
         header {
             background: linear-gradient(135deg, #6a11cb, #2575fc);
             color: white;
-            padding: 60px 20px;
+            padding: 50px 20px;
             text-align: center;
         }
 
@@ -24,13 +24,8 @@
             font-size: 42px;
         }
 
-        header p {
-            font-size: 18px;
-            margin-top: 10px;
-        }
-
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 40px auto;
             padding: 0 20px;
         }
@@ -38,9 +33,42 @@
         .card {
             background: white;
             border-radius: 12px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             margin-bottom: 40px;
+        }
+
+        /* 影片區塊版型 */
+        .video-layout {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* 左邊選單 */
+        .video-menu {
+            width: 280px;
+            border-right: 1px solid #eee;
+        }
+
+        .video-menu h3 {
+            margin-top: 0;
+        }
+
+        .video-item {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: 0.2s;
+        }
+
+        .video-item:hover {
+            background: #eef3ff;
+        }
+
+        /* 右邊播放器 */
+        .video-player {
+            flex: 1;
         }
 
         .video-wrapper {
@@ -71,38 +99,63 @@
 
 <body>
 
-    <header>
-        <h1>旅遊就好</h1>
-        <p>新北耶誕城</p>
-    </header>
+<header>
+    <h1>旅遊就好</h1>
+    <p>新北耶誕城影片集</p>
+</header>
 
-    <div class="container">
+<div class="container">
 
-        <div class="card">
-            <h2>關於我</h2>
-            <p>
-                新北耶誕城，如一座夢幻國度，在歲末時節點亮整個城市的冬夜。當夜幕低垂，萬千燈火交織成流光溢彩的銀河，從廣場綻放至街道巷弄，每一處皆閃爍著溫暖與希望。高聳的聖誕樹披上璀璨燈飾，隨音樂律動，彷彿夜空中最耀眼的星辰。漫步其中，空氣中瀰漫著淡淡的冬日暖意，旋轉木馬與燈海隧道映襯著孩童的笑顏，將幸福化為閃爍的光點，點綴在人們心中。這裡不僅是冬季最燦爛的風景，更是一場愛與夢想交織的盛宴，讓每一顆心都在光影交錯間感受節慶的溫度。
-            </p>
-        </div>
+    <div class="card">
+        <h2>推薦影片</h2>
 
-        <div class="card">
-            <h2>推薦影片</h2>
+        <div class="video-layout">
 
-            <div class="video-wrapper">
-                <iframe
-                    src="https://www.youtube.com/embed/c2ctgbsYoWE"
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
+            <!-- 左邊影片選單 -->
+            <div class="video-menu">
+                <h3>影片清單</h3>
+
+                <div class="video-item" onclick="playVideo('https://www.youtube.com/watch?v=c2ctgbsYoWE')">
+                    🎄 2023新北耶誕城
+                </div>
+
+                <div class="video-item" onclick="playVideo('https://www.youtube.com/watch?v=b5yp3OzCKXc')">
+                    ✨ 海洋生物
+                </div>
+
+                <div class="video-item" onclick="playVideo('https://www.youtube.com/watch?v=u-XgX6U4Ec0')">
+                    🎠 社子島
+                </div>
+
             </div>
-        </div>
 
+            <!-- 右邊播放器 -->
+            <div class="video-player">
+                <div class="video-wrapper">
+                    <iframe
+                        id="youtubePlayer"
+                        src="https://www.youtube.com/embed/c2ctgbsYoWE"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <footer>
-        © 2025 我的網站
-    </footer>
+</div>
+
+<footer>
+    © 2025 旅遊就好. All rights reserved.
+</footer>
+
+<script>
+    function playVideo(videoId) {
+        const player = document.getElementById("youtubePlayer");
+        player.src = "https://www.youtube.com/embed/" + videoId;
+    }
+</script>
 
 </body>
 </html>
