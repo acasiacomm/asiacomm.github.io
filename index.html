@@ -12,8 +12,8 @@ header {background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:5
 body.dark .card {background:#222;color:#eee;}
 
 /* 影片區塊 */
-.video-layout {display:flex;gap:20px;}
-.video-menu {width:220px;}
+.video-layout {display:flex;gap:20px;align-items:flex-start;}
+.video-menu {width:220px;flex-shrink:0;}
 .video-item {padding:10px;cursor:pointer;border-radius:6px;margin-bottom:8px;}
 .video-item.active {background:#2575fc;color:white;font-weight:bold;}
 .video-player {flex:1;}
@@ -21,7 +21,7 @@ body.dark .card {background:#222;color:#eee;}
 .video-wrapper iframe {position:absolute;width:100%;height:100%;border:none;}
 
 /* 購物選單 */
-.shop-menu {width:220px;background:#fff;border-radius:12px;padding:15px;box-shadow:0 4px 15px rgba(0,0,0,0.1);transition:0.3s;}
+.shop-menu {width:220px;flex-shrink:0;background:#fff;border-radius:12px;padding:15px;box-shadow:0 4px 15px rgba(0,0,0,0.1);transition:0.3s;}
 body.dark .shop-menu {background:#222;color:#eee;}
 .shop-menu h3 {margin-top:0;margin-bottom:10px;font-size:18px;}
 .shop-menu ul {list-style:none;padding:0;margin:0;}
@@ -69,55 +69,55 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 <button id="darkModeBtn">🌙 深色模式</button>
 
 <div class="container">
-<div class="card">
-<div class="video-layout">
-  <!-- 左側影片選單 -->
-  <div class="video-menu">
-    <div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
-    <div class="video-item" data-id="DauE0ZAVfLo">🌌 關渡橋與關渡濕地</div>
-    <div class="video-item" data-id="CgM8GbcfQA0">🌊 2023坪溪</div>
-    <div class="video-item" data-id="kuXlTM_xFos">🏙️ 金山海岸</div>
-    <div class="video-item" data-id="DXKRYOX5eEw">🌄 石門-風箏公園</div>
-    <div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
-    <div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
-    <div class="video-item" data-id="1eklV-oBPYg">🏞️ 霧台</div>
-    <div class="video-item" data-id="ItaSIOD90lE">🚆 自由廣場</div>
-    <div class="video-item" data-id="k49D0Iu4vSU">🏖️ 貴子坑</div>
-  </div>
+  <div class="card">
+    <div class="video-layout">
+      <!-- 左側影片選單 -->
+      <div class="video-menu">
+        <div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
+        <div class="video-item" data-id="DauE0ZAVfLo">🌌 關渡橋與關渡濕地</div>
+        <div class="video-item" data-id="CgM8GbcfQA0">🌊 2023坪溪</div>
+        <div class="video-item" data-id="kuXlTM_xFos">🏙️ 金山海岸</div>
+        <div class="video-item" data-id="DXKRYOX5eEw">🌄 石門-風箏公園</div>
+        <div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
+        <div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
+        <div class="video-item" data-id="1eklV-oBPYg">🏞️ 霧台</div>
+        <div class="video-item" data-id="ItaSIOD90lE">🚆 自由廣場</div>
+        <div class="video-item" data-id="k49D0Iu4vSU">🏖️ 貴子坑</div>
+      </div>
 
-  <!-- 中間影片播放器 -->
-  <div class="video-player">
-    <div class="video-wrapper" id="videoWrapper">
-      <div id="youtubePlayer"></div>
+      <!-- 中間影片播放器 -->
+      <div class="video-player">
+        <div class="video-wrapper" id="videoWrapper">
+          <div id="youtubePlayer"></div>
+        </div>
+      </div>
+
+      <!-- 右側購物選單 -->
+      <div class="shop-menu">
+        <h3>購物推薦</h3>
+        <ul>
+          <li><a href="https://www.momoshop.com.tw/">🎁 MOMO</a></li>
+          <li><a href="https://24h.pchome.com.tw/">🎁 PChome</a></li>
+        </ul>
+      </div>
     </div>
   </div>
-
-  <!-- 右側購物選單 -->
-  <div class="shop-menu">
-    <h3>購物推薦</h3>
-    <ul>
-      <li><a href="https://www.momoshop.com.tw/">🎁 MOMO</a></li>
-      <li><a href="https://24h.pchome.com.tw/">🎁 商品2</a></li>
-    </ul>
-  </div>
-</div>
-</div>
 </div>
 
 <div class="container">
-<div class="card" id="postContainer">
-<h2>最新貼文</h2>
-<div id="postGrid" class="post-grid"></div>
-</div>
+  <div class="card" id="postContainer">
+    <h2>最新貼文</h2>
+    <div id="postGrid" class="post-grid"></div>
+  </div>
 </div>
 
 <div id="postModal">
-<div class="modal-content">
-<span class="closeBtn" onclick="closePost()">✕</span>
-<div id="modalSlider"></div>
-<h2 id="modalTitle"></h2>
-<p id="modalContent"></p>
-</div>
+  <div class="modal-content">
+    <span class="closeBtn" onclick="closePost()">✕</span>
+    <div id="modalSlider"></div>
+    <h2 id="modalTitle"></h2>
+    <p id="modalContent"></p>
+  </div>
 </div>
 
 <footer>© 2025 旅遊就好. All rights reserved.</footer>
@@ -127,15 +127,13 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 const articles=[
   {id:1,title:"《春秋繁露》古籍",summary:"介紹古籍《春秋繁露》的背景與內容。",content:`這是一本名為《春秋繁露》的古籍，其年代可追溯至漢代，作者歸功於董仲舒。`,tags:["海","城市"],images:["IMG_20251207_100736.jpg"]},
   {id:2,title:"中國古籍",summary:"古籍《左傳》及相關評論",content:"這是一本展開的中國古籍，文字為直書繁體字。",tags:["山","海"],images:["IMG_20251207_100406.jpg"]},
-  {id:3,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:"這是一本名為《周官講義》的古籍書頁。",tags:["城市"],images:["IMG_20251207_100410.jpg"]}
-];
-articles.push(
+  {id:3,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:"這是一本名為《周官講義》的古籍書頁。",tags:["城市"],images:["IMG_20251207_100410.jpg"]},
   {id:4, title:"《資治通鑑》", summary:"這是一本《資治通鑑》的朝鮮時代思政殿版本", content:"出版於1436 年。該版本包含註釋，詳細解釋了中國地名、歷史人物、故事和評論。", tags:["城市","歷史"], images:["IMG_20251207_100451.jpg"]},
   {id:5, title:"「蜀本」", summary:"內容涉及中國古典文學評論和版本學", content:"主要討論了趙次公對杜甫詩歌的註解，並提到了一個「蜀本」版本，強調了其詳盡和價值。", tags:["山","海"], images:["IMG_20251207_100654.jpg"]},
   {id:6, title:"《新刊校定集注杜詩》殘卷", summary:"這是一本南宋寶慶乙酉（1225年）廣東漕司鏡板刊行的", content:`此為宋版書，極具歷史價值，是中國古代雕版印刷的高峰時期作品。
 圖片顯示的是卷二十七和卷二十八的部分內容。
 書中包含了杜甫的詩作以及多位學者的集注。`, tags:["山","城市"], images:["IMG_20251207_100658.jpg"]}
-);
+];
 
 // --- Render Posts ---
 const postGrid=document.getElementById("postGrid");
