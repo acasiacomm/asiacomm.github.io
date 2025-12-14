@@ -10,14 +10,26 @@ header {background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:5
 .container {max-width:1200px;margin:40px auto;padding:0 20px;}
 .card {background:white;border-radius:12px;padding:20px;box-shadow:0 8px 20px rgba(0,0,0,0.1);transition:0.3s;}
 body.dark .card {background:#222;color:#eee;}
+
+/* 影片區塊 */
 .video-layout {display:flex;gap:20px;}
-@media(max-width:768px){.video-layout{flex-direction:column;}}
-.video-menu {width:280px;}
+.video-menu {width:220px;}
 .video-item {padding:10px;cursor:pointer;border-radius:6px;margin-bottom:8px;}
 .video-item.active {background:#2575fc;color:white;font-weight:bold;}
 .video-player {flex:1;}
 .video-wrapper {position:relative;padding-bottom:56.25%;height:0;cursor:pointer;}
 .video-wrapper iframe {position:absolute;width:100%;height:100%;border:none;}
+
+/* 購物選單 */
+.shop-menu {width:220px;background:#fff;border-radius:12px;padding:15px;box-shadow:0 4px 15px rgba(0,0,0,0.1);transition:0.3s;}
+body.dark .shop-menu {background:#222;color:#eee;}
+.shop-menu h3 {margin-top:0;margin-bottom:10px;font-size:18px;}
+.shop-menu ul {list-style:none;padding:0;margin:0;}
+.shop-menu ul li {margin-bottom:8px;}
+.shop-menu ul li a {text-decoration:none;color:#2575fc;font-weight:500;transition:0.2s;}
+.shop-menu ul li a:hover {color:#6a11cb;text-decoration:underline;}
+
+/* 貼文區塊 */
 .post-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px;}
 .post-card {background:#fff;border-radius:10px;padding:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);cursor:pointer;transition:0.2s;}
 body.dark .post-card {background:#333;color:#eee;}
@@ -26,13 +38,22 @@ body.dark .post-card {background:#333;color:#eee;}
 .post-card h3 {margin:10px 0 5px;}
 .post-card .tags span {background:#eee;border-radius:4px;padding:2px 6px;margin-right:5px;font-size:12px;}
 body.dark .post-card .tags span {background:#555;color:#eee;}
+
+/* Modal */
 #postModal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;overflow:auto;}
 #postModal .modal-content {background:white;max-width:800px;margin:50px auto;padding:20px;position:relative;border-radius:12px;transition:0.3s;}
 body.dark #postModal .modal-content {background:#222;color:#eee;}
 #postModal img {max-width:100%;margin-bottom:10px;border-radius:8px;cursor:pointer;}
 #postModal .closeBtn {position:absolute;top:10px;right:20px;cursor:pointer;font-size:20px;}
+
 #postContainer input {width:100%;padding:8px 10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
 #darkModeBtn {position:fixed;top:20px;right:20px;padding:10px;border:none;border-radius:6px;cursor:pointer;z-index:10000;}
+
+/* 響應式 */
+@media(max-width:992px){
+  .video-layout {flex-direction:column;}
+  .video-menu, .shop-menu {width:100%;}
+}
 </style>
 </head>
 <body>
@@ -50,23 +71,35 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 <div class="container">
 <div class="card">
 <div class="video-layout">
-<div class="video-menu">
-<div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
-<div class="video-item" data-id="DauE0ZAVfLo">🌌 關渡橋與關渡濕地</div>
-<div class="video-item" data-id="CgM8GbcfQA0">🌊 2023坪溪</div>
-<div class="video-item" data-id="kuXlTM_xFos">🏙️ 金山海岸</div>
-<div class="video-item" data-id="DXKRYOX5eEw">🌄 石門-風箏公園</div>
-<div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
-<div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
-<div class="video-item" data-id="1eklV-oBPYg">🏞️ 霧台</div>
-<div class="video-item" data-id="ItaSIOD90lE">🚆 自由廣場</div>
-<div class="video-item" data-id="k49D0Iu4vSU">🏖️ 貴子坑</div>
-</div>
-<div class="video-player">
-<div class="video-wrapper" id="videoWrapper">
-<div id="youtubePlayer"></div>
-</div>
-</div>
+  <!-- 左側影片選單 -->
+  <div class="video-menu">
+    <div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
+    <div class="video-item" data-id="DauE0ZAVfLo">🌌 關渡橋與關渡濕地</div>
+    <div class="video-item" data-id="CgM8GbcfQA0">🌊 2023坪溪</div>
+    <div class="video-item" data-id="kuXlTM_xFos">🏙️ 金山海岸</div>
+    <div class="video-item" data-id="DXKRYOX5eEw">🌄 石門-風箏公園</div>
+    <div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
+    <div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
+    <div class="video-item" data-id="1eklV-oBPYg">🏞️ 霧台</div>
+    <div class="video-item" data-id="ItaSIOD90lE">🚆 自由廣場</div>
+    <div class="video-item" data-id="k49D0Iu4vSU">🏖️ 貴子坑</div>
+  </div>
+
+  <!-- 中間影片播放器 -->
+  <div class="video-player">
+    <div class="video-wrapper" id="videoWrapper">
+      <div id="youtubePlayer"></div>
+    </div>
+  </div>
+
+  <!-- 右側購物選單 -->
+  <div class="shop-menu">
+    <h3>購物推薦</h3>
+    <ul>
+      <li><a href="https://www.momoshop.com.tw/">🎁 MOMO</a></li>
+      <li><a href="https://24h.pchome.com.tw/">🎁 商品2</a></li>
+    </ul>
+  </div>
 </div>
 </div>
 </div>
@@ -96,8 +129,6 @@ const articles=[
   {id:2,title:"中國古籍",summary:"古籍《左傳》及相關評論",content:"這是一本展開的中國古籍，文字為直書繁體字。",tags:["山","海"],images:["IMG_20251207_100406.jpg"]},
   {id:3,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:"這是一本名為《周官講義》的古籍書頁。",tags:["城市"],images:["IMG_20251207_100410.jpg"]}
 ];
-
-// --- 新增 3 篇文章 ---
 articles.push(
   {id:4, title:"《資治通鑑》", summary:"這是一本《資治通鑑》的朝鮮時代思政殿版本", content:"出版於1436 年。該版本包含註釋，詳細解釋了中國地名、歷史人物、故事和評論。", tags:["城市","歷史"], images:["IMG_20251207_100451.jpg"]},
   {id:5, title:"「蜀本」", summary:"內容涉及中國古典文學評論和版本學", content:"主要討論了趙次公對杜甫詩歌的註解，並提到了一個「蜀本」版本，強調了其詳盡和價值。", tags:["山","海"], images:["IMG_20251207_100654.jpg"]},
@@ -190,7 +221,6 @@ const tag=document.createElement('script');
 tag.src="https://www.youtube.com/iframe_api";
 document.body.appendChild(tag);
 </script>
-
 
 </body>
 </html>
