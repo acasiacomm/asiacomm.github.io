@@ -51,7 +51,7 @@ body.dark .post-card .tags span { background:#555; color:#eee; }
 #postModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; overflow:auto; }
 #postModal .modal-content { background:white; max-width:800px; margin:50px auto; padding:20px; position:relative; border-radius:12px; transition: background 0.3s, color 0.3s; }
 body.dark #postModal .modal-content { background:#222; color:#eee; }
-#postModal img { max-width:100%; margin-bottom:10px; border-radius:8px; }
+#postModal img { max-width:100%; margin-bottom:10px; border-radius:8px; cursor:pointer; }
 #postModal .closeBtn { position:absolute; top:10px; right:20px; cursor:pointer; font-size:20px; }
 
 /* --- Search Input --- */
@@ -167,14 +167,33 @@ document.body.appendChild(tag);
 
 // --- Articles Data ---
 const articles=[
-  {id:1,title:"《春秋繁露》古籍",summary:"海風與天空的午後",content:"
-這是一本名為《春秋繁露》的古籍，其年代可追溯至漢代，作者歸功於董仲舒。 
-該書約有八十二篇，七萬兩千字。 內容涉及陰陽五行學說及其與政治的關係，
-是重要的政治論著。 儘管歸屬於董仲舒，但目前的版本可能是歷經後人編纂而成。 
-書頁上的紅色印記是古籍鑑藏章，顯示了此書的收藏歷史。 ",tags:["海","城市"],images:["IMG_20251207_100736.jpg"]},
-    
-  {id:2,title:"關渡濕地漫遊",summary:"濕地生態觀察",content:"完整文章內容2",tags:["山","海"],images:["IMG_20251207_100406.jpg"]},
-  {id:3,title:"社子島探險",summary:"城市與河岸的交會",content:"完整文章內容3",tags:["城市"],images:["hIMG_20251207_100410.jpg"]}
+  {
+    id:1,
+    title:"《春秋繁露》古籍",
+    summary:"海風與天空的午後",
+    content:`這是一本名為《春秋繁露》的古籍，其年代可追溯至漢代，
+作者歸功於董仲舒。該書約有八十二篇，七萬兩千字。內容涉及陰陽五行學說及其與政治的關係，
+是重要的政治論著。儘管歸屬於董仲舒，但目前的版本可能是歷經後人編纂而成。
+書頁上的紅色印記是古籍鑑藏章，顯示了此書的收藏歷史。`,
+    tags:["海","城市"],
+    images:["IMG_20251207_100736.jpg"]
+  },
+  {
+    id:2,
+    title:"關渡濕地漫遊",
+    summary:"濕地生態觀察",
+    content:"完整文章內容2",
+    tags:["山","海"],
+    images:["IMG_20251207_100406.jpg"]
+  },
+  {
+    id:3,
+    title:"社子島探險",
+    summary:"城市與河岸的交會",
+    content:"完整文章內容3",
+    tags:["城市"],
+    images:["IMG_20251207_100410.jpg"]
+  }
 ];
 
 // --- Render Posts ---
@@ -208,7 +227,12 @@ function openPost(id){
   const slider=document.getElementById("modalSlider");
   slider.innerHTML=post.images.map((img,i)=>`<img src="${img}" style="display:${i===0?'block':'none'}">`).join("");
   let idx=0;
-  slider.onclick=()=>{const imgs=slider.querySelectorAll("img"); imgs[idx].style.display="none"; idx=(idx+1)%imgs.length; imgs[idx].style.display="block";};
+  slider.onclick=()=>{
+    const imgs=slider.querySelectorAll("img");
+    imgs[idx].style.display="none";
+    idx=(idx+1)%imgs.length;
+    imgs[idx].style.display="block";
+  };
 
   postModal.style.display="block";
 }
@@ -216,7 +240,11 @@ function closePost(){postModal.style.display="none";}
 
 // --- Dark Mode ---
 const darkBtn=document.getElementById("darkModeBtn");
-darkBtn.onclick=()=>{const on=!document.body.classList.contains("dark"); document.body.classList.toggle("dark",on); localStorage.setItem("darkMode",on?"1":"0");};
+darkBtn.onclick=()=>{
+  const on=!document.body.classList.contains("dark");
+  document.body.classList.toggle("dark",on);
+  localStorage.setItem("darkMode",on?"1":"0");
+};
 if(localStorage.getItem("darkMode")==="1") document.body.classList.add("dark");
 </script>
 
