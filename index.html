@@ -37,7 +37,6 @@ header {
     gap: 20px;
 }
 
-/* 📱 手機版上下排列 */
 @media (max-width: 768px) {
     .video-layout {
         flex-direction: column;
@@ -55,7 +54,6 @@ header {
     margin-bottom: 8px;
 }
 
-/* ▶ 目前播放反白 */
 .video-item.active {
     background: #2575fc;
     color: white;
@@ -70,6 +68,7 @@ header {
     position: relative;
     padding-bottom: 56.25%;
     height: 0;
+    cursor: pointer; /* 提示可點 */
 }
 
 .video-wrapper iframe {
@@ -92,9 +91,9 @@ footer {
 
 <header>
 <h1>旅遊就好</h1>
-<p>✨ 不完美的旅途也值得
-✨ 放下一切比較，擁抱當下
-✨ 旅遊，是療癒、是學習、是生活的一部分
+<p>✨ 不完美的旅途也值得<br>
+✨ 放下一切比較，擁抱當下<br>
+✨ 旅遊，是療癒、是學習、是生活的一部分<br>
 ✨ 你值得去看更多、更遠、更深</p>
 </header>
 
@@ -103,22 +102,15 @@ footer {
 
 <div class="video-layout">
 
-<!-- 左邊清單 -->
 <div class="video-menu">
 <div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
 <div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
 <div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
 </div>
 
-<!-- 播放器 -->
 <div class="video-player">
-<div class="video-wrapper">
-<iframe
-    id="youtubePlayer"
-    src="https://www.youtube.com/embed/c2ctgbsYoWE?autoplay=1&mute=1&enablejsapi=1"
-    allow="autoplay; encrypted-media"
-    allowfullscreen>
-</iframe>
+<div class="video-wrapper" id="videoWrapper">
+<div id="youtubePlayer"></div>
 </div>
 </div>
 
@@ -132,29 +124,48 @@ footer {
 const videos = document.querySelectorAll(".video-item");
 let currentIndex = 0;
 let player;
+let hasInteracted = false;
 
-/* ▶ 點擊切換影片 */
+/* 點清單切換影片（有聲） */
 videos.forEach((item, index) => {
     item.addEventListener("click", () => {
         playVideo(index, true);
     });
 });
 
-/* ▶ 播放影片 */
-function playVideo(index, userClick = false) {
+/* 播放影片 */
+function playVideo(index, withSound = false) {
     currentIndex = index;
     const videoId = videos[index].dataset.id;
 
-    document.getElementById("youtubePlayer").src =
-        `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${userClick ? 0 : 1}&enablejsapi=1`;
+    player.loadVideoById(videoId);
+
+    if (withSound) {
+        player.unMute();
+    } else {
+        player.mute();
+    }
 
     videos.forEach(v => v.classList.remove("active"));
     videos[index].classList.add("active");
 }
 
-/* ▶ YouTube API（監聽播完） */
+/* 點畫面 → 開聲音（只執行一次） */
+document.getElementById("videoWrapper").addEventListener("click", () => {
+    if (hasInteracted || !player) return;
+    hasInteracted = true;
+    player.unMute();
+});
+
+/* YouTube API ready */
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('youtubePlayer', {
+        videoId: 'c2ctgbsYoWE',
+        playerVars: {
+            autoplay: 1,
+            mute: 1,
+            rel: 0
+        },
         events: {
             onStateChange: (event) => {
                 if (event.data === YT.PlayerState.ENDED) {
@@ -165,7 +176,7 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
-/* ▶ 播完播下一支 */
+/* 播完播下一支 */
 function playNext() {
     let next = currentIndex + 1;
     if (next >= videos.length) next = 0;
