@@ -12,16 +12,29 @@ header {background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:5
 body.dark .card {background:#222;color:#eee;}
 
 /* 影片區塊 */
-.video-layout {display:flex;gap:20px;align-items:flex-start;}
+.video-layout {
+  display:flex;
+  gap:20px;
+  align-items:flex-start;
+  flex-wrap: wrap;
+}
 .video-menu {width:220px;flex-shrink:0;}
 .video-item {padding:10px;cursor:pointer;border-radius:6px;margin-bottom:8px;}
 .video-item.active {background:#2575fc;color:white;font-weight:bold;}
-.video-player {flex:1;}
+.video-player {flex:1;min-width:300px;}
 .video-wrapper {position:relative;padding-bottom:56.25%;height:0;cursor:pointer;}
 .video-wrapper iframe {position:absolute;width:100%;height:100%;border:none;}
 
-/* 購物選單 */
-.shop-menu {width:220px;flex-shrink:0;background:#fff;border-radius:12px;padding:15px;box-shadow:0 4px 15px rgba(0,0,0,0.1);transition:0.3s;}
+/* 購物選單（固定寬度） */
+.shop-menu {
+  width:220px;
+  flex-shrink:0;
+  background:#fff;
+  border-radius:12px;
+  padding:15px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+  transition:0.3s;
+}
 body.dark .shop-menu {background:#222;color:#eee;}
 .shop-menu h3 {margin-top:0;margin-bottom:10px;font-size:18px;}
 .shop-menu ul {list-style:none;padding:0;margin:0;}
