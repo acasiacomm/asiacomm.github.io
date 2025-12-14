@@ -32,6 +32,12 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 #postModal img {max-width:100%;margin-bottom:10px;border-radius:8px;cursor:pointer;}
 #postModal .closeBtn {position:absolute;top:10px;right:20px;cursor:pointer;font-size:20px;}
 #darkModeBtn {position:fixed;top:20px;right:20px;padding:10px;border:none;border-radius:6px;cursor:pointer;z-index:10000;}
+
+/* 新增購物網站區 */
+.shop-menu {width:200px;display:flex;flex-direction:column;gap:10px;}
+.shop-menu a img {width:100%;border-radius:8px;cursor:pointer;transition:0.2s;}
+.shop-menu a img:hover {transform:scale(1.05);}
+@media(max-width:768px){.video-layout{flex-direction:column;}.shop-menu{width:100%;flex-direction:row;overflow-x:auto;gap:10px;}}
 </style>
 </head>
 <body>
@@ -49,23 +55,28 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 <div class="container">
 <div class="card">
 <div class="video-layout">
-<div class="video-menu">
-<div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
-<div class="video-item" data-id="DauE0ZAVfLo">🌌 關渡橋與關渡濕地</div>
-<div class="video-item" data-id="CgM8GbcfQA0">🌊 2023坪溪</div>
-<div class="video-item" data-id="kuXlTM_xFos">🏙️ 金山海岸</div>
-<div class="video-item" data-id="DXKRYOX5eEw">🌄 石門-風箏公園</div>
-<div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
-<div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
-<div class="video-item" data-id="1eklV-oBPYg">🏞️ 霧台</div>
-<div class="video-item" data-id="ItaSIOD90lE">🚆 自由廣場</div>
-<div class="video-item" data-id="k49D0Iu4vSU">🏖️ 貴子坑</div>
-</div>
-<div class="video-player">
-<div class="video-wrapper" id="videoWrapper">
-<div id="youtubePlayer"></div>
-</div>
-</div>
+  <div class="video-menu">
+    <div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
+    <div class="video-item" data-id="DauE0ZAVfLo">🌌 關渡橋與關渡濕地</div>
+    <div class="video-item" data-id="CgM8GbcfQA0">🌊 2023坪溪</div>
+    <div class="video-item" data-id="kuXlTM_xFos">🏙️ 金山海岸</div>
+    <div class="video-item" data-id="DXKRYOX5eEw">🌄 石門-風箏公園</div>
+    <div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
+    <div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
+    <div class="video-item" data-id="1eklV-oBPYg">🏞️ 霧台</div>
+    <div class="video-item" data-id="ItaSIOD90lE">🚆 自由廣場</div>
+    <div class="video-item" data-id="k49D0Iu4vSU">🏖️ 貴子坑</div>
+  </div>
+  <div class="video-player">
+    <div class="video-wrapper" id="videoWrapper">
+      <div id="youtubePlayer"></div>
+    </div>
+  </div>
+  <div class="shop-menu">
+    <a href="https://www.example1.com" target="_blank"><img src="shop1.jpg" alt="購物網站1"></a>
+    <a href="https://www.example2.com" target="_blank"><img src="shop2.jpg" alt="購物網站2"></a>
+    <a href="https://www.example3.com" target="_blank"><img src="shop3.jpg" alt="購物網站3"></a>
+  </div>
 </div>
 </div>
 </div>
@@ -103,7 +114,6 @@ const articles=[
 
 // --- Render Posts ---
 const postGrid=document.getElementById("postGrid");
-
 function renderPosts(){
   postGrid.innerHTML = articles.map(a => `
     <div class="post-card" onclick="openPost(${a.id})">
@@ -112,7 +122,6 @@ function renderPosts(){
     </div>
   `).join("");
 }
-
 renderPosts();
 
 // --- Post Modal ---
@@ -153,12 +162,10 @@ function onYouTubeIframeAPIReady(){
     events:{onReady:()=>{setupVideoMenu();},onStateChange:(e)=>{if(e.data===YT.PlayerState.ENDED) playNext();}}
   });
 }
-
 function setupVideoMenu(){
   const videos=document.querySelectorAll(".video-item");
   videos.forEach((item,index)=>item.addEventListener("click",()=>playVideo(index,true)));
 }
-
 function playVideo(index,withSound=false){
   const videos=document.querySelectorAll(".video-item");
   currentIndex=index;
@@ -167,7 +174,6 @@ function playVideo(index,withSound=false){
   videos.forEach(v=>v.classList.remove("active"));
   videos[index].classList.add("active");
 }
-
 function playNext(){
   let next=currentIndex+1;
   const videos=document.querySelectorAll(".video-item");
