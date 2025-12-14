@@ -92,18 +92,19 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 <script>
 // --- Articles Data ---
 const articles=[
-{id:1,title:"《春秋繁露》古籍",summary:"介紹古籍《春秋繁露》的背景與內容。",content:`這是一本名為《春秋繁露》的古籍，其年代可追溯至漢代，作者歸功於董仲舒。`,tags:["海","城市"],images:["IMG_20251207_100736.jpg"]},
-{id:2,title:"中國古籍",summary:"古籍《左傳》及相關評論",content:"這是一本展開的中國古籍，文字為直書繁體字。",tags:["山","海"],images:["IMG_20251207_100406.jpg"]},
-{id:3,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:"這是一本名為《周官講義》的古籍書頁。",tags:["城市"],images:["IMG_20251207_100410.jpg"]}
-  articles.push(
-  {id:4, title:"《資治通鑑》", summary:"這是一本《資治通鑑》的朝鮮時代思政殿版本", content:"出版於1436 年。 該版本包含註釋，詳細解釋了中國地名、歷史人物、故事和評論。 ", tags:["城市","歷史"], images:["IMG_20251207_100451.jpg"]},
-  {id:5, title:"「蜀本」", summary:"內容涉及中國古典文學評論和版本學", content:"主要討論了趙次公對杜甫詩歌的註解，並提到了一個「蜀本」版本，強調了其詳盡和價值。 ", tags:["山","海"], images:["IMG_20251207_100654.jpg"]},
-  {id:6, title:"《新刊校定集注杜詩》殘卷", summary:"這是一本南宋寶慶乙酉（1225年）廣東漕司鏡板刊行的", content:"此為宋版書，極具歷史價值，是中國古代雕版印刷的高峰時期作品。 
-圖片顯示的是卷二十七和卷二十八的部分內容。
-書中包含了杜甫的詩作以及多位學者的集注。", tags:["山","城市"], images:["IMG_20251207_100658.jpg"]}
-);
-
+  {id:1,title:"《春秋繁露》古籍",summary:"介紹古籍《春秋繁露》的背景與內容。",content:`這是一本名為《春秋繁露》的古籍，其年代可追溯至漢代，作者歸功於董仲舒。`,tags:["海","城市"],images:["IMG_20251207_100736.jpg"]},
+  {id:2,title:"中國古籍",summary:"古籍《左傳》及相關評論",content:"這是一本展開的中國古籍，文字為直書繁體字。",tags:["山","海"],images:["IMG_20251207_100406.jpg"]},
+  {id:3,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:"這是一本名為《周官講義》的古籍書頁。",tags:["城市"],images:["IMG_20251207_100410.jpg"]}
 ];
+
+// --- 新增 3 篇文章 ---
+articles.push(
+  {id:4, title:"《資治通鑑》", summary:"這是一本《資治通鑑》的朝鮮時代思政殿版本", content:"出版於1436 年。該版本包含註釋，詳細解釋了中國地名、歷史人物、故事和評論。", tags:["城市","歷史"], images:["IMG_20251207_100451.jpg"]},
+  {id:5, title:"「蜀本」", summary:"內容涉及中國古典文學評論和版本學", content:"主要討論了趙次公對杜甫詩歌的註解，並提到了一個「蜀本」版本，強調了其詳盡和價值。", tags:["山","海"], images:["IMG_20251207_100654.jpg"]},
+  {id:6, title:"《新刊校定集注杜詩》殘卷", summary:"這是一本南宋寶慶乙酉（1225年）廣東漕司鏡板刊行的", content:`此為宋版書，極具歷史價值，是中國古代雕版印刷的高峰時期作品。
+圖片顯示的是卷二十七和卷二十八的部分內容。
+書中包含了杜甫的詩作以及多位學者的集注。`, tags:["山","城市"], images:["IMG_20251207_100658.jpg"]}
+);
 
 // --- Render Posts ---
 const postGrid=document.getElementById("postGrid");
@@ -112,15 +113,15 @@ searchInput.placeholder="搜尋貼文...";
 document.getElementById("postContainer").prepend(searchInput);
 
 function renderPosts(){
-const keyword=searchInput.value.toLowerCase();
-const filtered=articles.filter(a=>a.title.toLowerCase().includes(keyword) || a.summary.toLowerCase().includes(keyword) || a.tags.some(t=>t.toLowerCase().includes(keyword)));
-postGrid.innerHTML=filtered.map(a=>`
-<div class="post-card" onclick="openPost(${a.id})">
-<img src="${a.images[0]}" />
-<h3>${a.title}</h3>
-<p>${a.summary}</p>
-<div class="tags">${a.tags.map(t=>`<span>${t}</span>`).join('')}</div>
-</div>`).join("");
+  const keyword=searchInput.value.toLowerCase();
+  const filtered=articles.filter(a=>a.title.toLowerCase().includes(keyword) || a.summary.toLowerCase().includes(keyword) || a.tags.some(t=>t.toLowerCase().includes(keyword)));
+  postGrid.innerHTML=filtered.map(a=>`
+    <div class="post-card" onclick="openPost(${a.id})">
+      <img src="${a.images[0]}" />
+      <h3>${a.title}</h3>
+      <p>${a.summary}</p>
+      <div class="tags">${a.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+    </div>`).join("");
 }
 searchInput.addEventListener("input",renderPosts);
 renderPosts();
@@ -128,60 +129,60 @@ renderPosts();
 // --- Post Modal ---
 const postModal=document.getElementById("postModal");
 function openPost(id){
-const post=articles.find(a=>a.id===id);
-document.getElementById("modalTitle").innerText=post.title;
-document.getElementById("modalContent").innerText=post.content;
-const slider=document.getElementById("modalSlider");
-slider.innerHTML=post.images.map((img,i)=>`<img src="${img}" style="display:${i===0?'block':'none'}">`).join("");
-let idx=0;
-slider.onclick=()=>{
-const imgs=slider.querySelectorAll("img");
-imgs[idx].style.display="none";
-idx=(idx+1)%imgs.length;
-imgs[idx].style.display="block";
-};
-postModal.style.display="block";
+  const post=articles.find(a=>a.id===id);
+  document.getElementById("modalTitle").innerText=post.title;
+  document.getElementById("modalContent").innerText=post.content;
+  const slider=document.getElementById("modalSlider");
+  slider.innerHTML=post.images.map((img,i)=>`<img src="${img}" style="display:${i===0?'block':'none'}">`).join("");
+  let idx=0;
+  slider.onclick=()=>{
+    const imgs=slider.querySelectorAll("img");
+    imgs[idx].style.display="none";
+    idx=(idx+1)%imgs.length;
+    imgs[idx].style.display="block";
+  };
+  postModal.style.display="block";
 }
 function closePost(){postModal.style.display="none";}
 
 // --- Dark Mode ---
 const darkBtn=document.getElementById("darkModeBtn");
 darkBtn.onclick=()=>{
-const on=!document.body.classList.contains("dark");
-document.body.classList.toggle("dark",on);
-localStorage.setItem("darkMode",on?"1":"0");
+  const on=!document.body.classList.contains("dark");
+  document.body.classList.toggle("dark",on);
+  localStorage.setItem("darkMode",on?"1":"0");
 };
 if(localStorage.getItem("darkMode")==="1") document.body.classList.add("dark");
 
 // --- Video Player ---
 let player,currentIndex=0;
 function onYouTubeIframeAPIReady(){
-player=new YT.Player('youtubePlayer',{
-videoId:'c2ctgbsYoWE',
-playerVars:{autoplay:1,mute:1,rel:0},
-events:{onReady:()=>{setupVideoMenu();},onStateChange:(e)=>{if(e.data===YT.PlayerState.ENDED) playNext();}}
-});
+  player=new YT.Player('youtubePlayer',{
+    videoId:'c2ctgbsYoWE',
+    playerVars:{autoplay:1,mute:1,rel:0},
+    events:{onReady:()=>{setupVideoMenu();},onStateChange:(e)=>{if(e.data===YT.PlayerState.ENDED) playNext();}}
+  });
 }
 
 function setupVideoMenu(){
-const videos=document.querySelectorAll(".video-item");
-videos.forEach((item,index)=>item.addEventListener("click",()=>playVideo(index,true)));
+  const videos=document.querySelectorAll(".video-item");
+  videos.forEach((item,index)=>item.addEventListener("click",()=>playVideo(index,true)));
 }
 
 function playVideo(index,withSound=false){
-const videos=document.querySelectorAll(".video-item");
-currentIndex=index;
-player.loadVideoById(videos[index].dataset.id);
-withSound?player.unMute():player.mute();
-videos.forEach(v=>v.classList.remove("active"));
-videos[index].classList.add("active");
+  const videos=document.querySelectorAll(".video-item");
+  currentIndex=index;
+  player.loadVideoById(videos[index].dataset.id);
+  withSound?player.unMute():player.mute();
+  videos.forEach(v=>v.classList.remove("active"));
+  videos[index].classList.add("active");
 }
 
 function playNext(){
-let next=currentIndex+1;
-const videos=document.querySelectorAll(".video-item");
-if(next>=videos.length) next=0;
-playVideo(next);
+  let next=currentIndex+1;
+  const videos=document.querySelectorAll(".video-item");
+  if(next>=videos.length) next=0;
+  playVideo(next);
 }
 
 // --- Load YouTube API ---
@@ -189,6 +190,7 @@ const tag=document.createElement('script');
 tag.src="https://www.youtube.com/iframe_api";
 document.body.appendChild(tag);
 </script>
+
 
 </body>
 </html>
