@@ -126,45 +126,6 @@ body.dark #postModal .modal-content { background:#222; color:#eee; }
 
 <!-- --- JS --- -->
 <script>
-// --- Video Player ---
-const videos = document.querySelectorAll(".video-item");
-let currentIndex=0, player, hasInteracted=false;
-
-videos.forEach((item,index)=>item.addEventListener("click",()=>playVideo(index,true)));
-
-function playVideo(index,withSound=false){
-  currentIndex=index;
-  const videoId=videos[index].dataset.id;
-  player.loadVideoById(videoId);
-  withSound?player.unMute():player.mute();
-  videos.forEach(v=>v.classList.remove("active"));
-  videos[index].classList.add("active");
-}
-
-document.getElementById("videoWrapper").addEventListener("click",()=>{
-  if(hasInteracted || !player) return;
-  hasInteracted=true;
-  player.unMute();
-});
-
-function onYouTubeIframeAPIReady(){
-  player=new YT.Player('youtubePlayer',{
-    videoId:'c2ctgbsYoWE',
-    playerVars:{autoplay:1, mute:1, rel:0},
-    events:{onStateChange:(event)=>{if(event.data===YT.PlayerState.ENDED) playNext();}}
-  });
-}
-
-function playNext(){
-  let next=currentIndex+1;
-  if(next>=videos.length) next=0;
-  playVideo(next);
-}
-
-const tag=document.createElement('script');
-tag.src="https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
-
 // --- Articles Data ---
 const articles=[
   {
@@ -182,7 +143,7 @@ const articles=[
     id:2,
     title:"中國古籍",
     summary:"古籍《左傳》及相關評論",
-    content:"這是一本展開的中國古籍，文字為直書繁體字，內容似乎是關於古代歷史或文學的註解與評論。 
+    content:"這是一本展開的中國古籍，文字為直書繁體字，內容涉及古代歷史或文學的註解與評論。 
 古籍內容涉及對《左傳》的評論，提及班固、左丘明等歷史人物。 
 文字討論了東漢時期《左傳》的流傳與名儒的看法。 
 書中包含了許多小字註解，並使用圈點符號表示斷句或強調。 
@@ -254,6 +215,47 @@ darkBtn.onclick=()=>{
   localStorage.setItem("darkMode",on?"1":"0");
 };
 if(localStorage.getItem("darkMode")==="1") document.body.classList.add("dark");
+
+// --- Video Player ---
+const videos = document.querySelectorAll(".video-item");
+let currentIndex=0, player, hasInteracted=false;
+
+videos.forEach((item,index)=>item.addEventListener("click",()=>playVideo(index,true)));
+
+function playVideo(index,withSound=false){
+  if(!player || !YT) return;
+  currentIndex=index;
+  const videoId=videos[index].dataset.id;
+  player.loadVideoById(videoId);
+  withSound ? player.unMute() : player.mute();
+  videos.forEach(v=>v.classList.remove("active"));
+  videos[index].classList.add("active");
+}
+
+document.getElementById("videoWrapper").addEventListener("click",()=>{
+  if(hasInteracted || !player) return;
+  hasInteracted=true;
+  player.unMute();
+});
+
+function onYouTubeIframeAPIReady(){
+  player=new YT.Player('youtubePlayer',{
+    videoId:'c2ctgbsYoWE',
+    playerVars:{autoplay:1, mute:1, rel:0},
+    events:{onStateChange:(event)=>{if(event.data===YT.PlayerState.ENDED) playNext();}}
+  });
+}
+
+function playNext(){
+  let next=currentIndex+1;
+  if(next>=videos.length) next=0;
+  playVideo(next);
+}
+
+// --- Load YouTube API ---
+const tag=document.createElement('script');
+tag.src="https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
 </script>
 
 </body>
