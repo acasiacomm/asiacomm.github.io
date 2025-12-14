@@ -22,7 +22,13 @@ body.dark .card {background:#222;color:#eee;}
 .post-card {background:#fff;border-radius:10px;padding:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);cursor:pointer;transition:0.2s;}
 body.dark .post-card {background:#333;color:#eee;}
 .post-card:hover {transform:translateY(-5px);}
-.post-card img {width:100%;border-radius:8px;}
+.post-card img {
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  border-radius:8px;
+  background:#ddd;
+}
 .post-card h3 {margin:10px 0 5px;}
 .post-card .tags span {background:#eee;border-radius:4px;padding:2px 6px;margin-right:5px;font-size:12px;}
 body.dark .post-card .tags span {background:#555;color:#eee;}
@@ -96,8 +102,6 @@ const articles=[
   {id:2,title:"中國古籍",summary:"古籍《左傳》及相關評論",content:"這是一本展開的中國古籍，文字為直書繁體字。",tags:["山","海"],images:["IMG_20251207_100406.jpg"]},
   {id:3,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:"這是一本名為《周官講義》的古籍書頁。",tags:["城市"],images:["IMG_20251207_100410.jpg"]}
 ];
-
-// --- 新增 3 篇文章 ---
 articles.push(
   {id:4, title:"《資治通鑑》", summary:"這是一本《資治通鑑》的朝鮮時代思政殿版本", content:"出版於1436 年。該版本包含註釋，詳細解釋了中國地名、歷史人物、故事和評論。", tags:["城市","歷史"], images:["IMG_20251207_100451.jpg"]},
   {id:5, title:"「蜀本」", summary:"內容涉及中國古典文學評論和版本學", content:"主要討論了趙次公對杜甫詩歌的註解，並提到了一個「蜀本」版本，強調了其詳盡和價值。", tags:["山","海"], images:["IMG_20251207_100654.jpg"]},
@@ -106,7 +110,7 @@ articles.push(
 書中包含了杜甫的詩作以及多位學者的集注。`, tags:["山","城市"], images:["IMG_20251207_100658.jpg"]}
 );
 
-// --- Render Posts ---
+// --- Render Posts with Lazy Loading ---
 const postGrid=document.getElementById("postGrid");
 const searchInput=document.createElement("input");
 searchInput.placeholder="搜尋貼文...";
@@ -117,12 +121,26 @@ function renderPosts(){
   const filtered=articles.filter(a=>a.title.toLowerCase().includes(keyword) || a.summary.toLowerCase().includes(keyword) || a.tags.some(t=>t.toLowerCase().includes(keyword)));
   postGrid.innerHTML=filtered.map(a=>`
     <div class="post-card" onclick="openPost(${a.id})">
-      <img src="${a.images[0]}" />
+      <img data-src="${a.images[0]}" loading="lazy" />
       <h3>${a.title}</h3>
       <p>${a.summary}</p>
       <div class="tags">${a.tags.map(t=>`<span>${t}</span>`).join('')}</div>
     </div>`).join("");
+
+  // IntersectionObserver 懶加載
+  document.querySelectorAll('.post-card img').forEach(img=>{
+    const observer = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          img.src = img.dataset.src;
+          observer.unobserve(img);
+        }
+      });
+    });
+    observer.observe(img);
+  });
 }
+
 searchInput.addEventListener("input",renderPosts);
 renderPosts();
 
@@ -190,7 +208,6 @@ const tag=document.createElement('script');
 tag.src="https://www.youtube.com/iframe_api";
 document.body.appendChild(tag);
 </script>
-
 
 </body>
 </html>
