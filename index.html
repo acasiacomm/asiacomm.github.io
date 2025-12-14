@@ -18,20 +18,15 @@ body.dark .card {background:#222;color:#eee;}
 .video-player {flex:1;}
 .video-wrapper {position:relative;padding-bottom:56.25%;height:0;cursor:pointer;}
 .video-wrapper iframe {position:absolute;width:100%;height:100%;border:none;}
-.post-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px;}
-.post-card {background:#fff;border-radius:10px;padding:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);cursor:pointer;transition:0.2s;}
-body.dark .post-card {background:#333;color:#eee;}
-.post-card:hover {transform:translateY(-5px);}
-.post-card img {width:100%;border-radius:8px;}
-.post-card h3 {margin:10px 0 5px;}
-.post-card .tags span {background:#eee;border-radius:4px;padding:2px 6px;margin-right:5px;font-size:12px;}
-body.dark .post-card .tags span {background:#555;color:#eee;}
+#postContainer ul {list-style:none;padding:0;margin:0;}
+#postContainer li {padding:10px 0; border-bottom:1px solid #ddd; cursor:pointer; transition:0.2s;}
+#postContainer li:hover {background:#f0f0f0;}
+body.dark #postContainer li:hover {background:#333;}
 #postModal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;overflow:auto;}
 #postModal .modal-content {background:white;max-width:800px;margin:50px auto;padding:20px;position:relative;border-radius:12px;transition:0.3s;}
 body.dark #postModal .modal-content {background:#222;color:#eee;}
 #postModal img {max-width:100%;margin-bottom:10px;border-radius:8px;cursor:pointer;}
 #postModal .closeBtn {position:absolute;top:10px;right:20px;cursor:pointer;font-size:20px;}
-#postContainer input {width:100%;padding:8px 10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
 #darkModeBtn {position:fixed;top:20px;right:20px;padding:10px;border:none;border-radius:6px;cursor:pointer;z-index:10000;}
 </style>
 </head>
@@ -74,7 +69,7 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 <div class="container">
 <div class="card" id="postContainer">
 <h2>最新貼文</h2>
-<div id="postGrid" class="post-grid"></div>
+<ul id="postList"></ul>
 </div>
 </div>
 
@@ -90,43 +85,26 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 <footer>© 2025 旅遊就好. All rights reserved.</footer>
 
 <script>
-// --- Articles Data with Thumb + Full ---
+// --- Articles Data ---
 const articles=[
   {id:1,title:"《春秋繁露》古籍",summary:"介紹古籍《春秋繁露》的背景與內容。",content:`這是一本名為《春秋繁露》的古籍，其年代可追溯至漢代，作者歸功於董仲舒。`,tags:["海","城市"],thumb:"thumb_IMG_20251207_100736.jpg",full:"IMG_20251207_100736.jpg"},
   {id:2,title:"中國古籍",summary:"古籍《左傳》及相關評論",content:"這是一本展開的中國古籍，文字為直書繁體字。",tags:["山","海"],thumb:"thumb_IMG_20251207_100406.jpg",full:"IMG_20251207_100406.jpg"},
-  {id:3,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:"這是一本名為《周官講義》的古籍書頁。",tags:["城市"],thumb:"thumb_IMG_20251207_100410.jpg",full:"IMG_20251207_100410.jpg"}
-];
-
-// --- Add More Articles ---
-articles.push(
+  {id:3,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:"這是一本名為《周官講義》的古籍書頁。",tags:["城市"],thumb:"thumb_IMG_20251207_100410.jpg",full:"IMG_20251207_100410.jpg"},
   {id:4, title:"《資治通鑑》", summary:"這是一本《資治通鑑》的朝鮮時代思政殿版本", content:"出版於1436 年。該版本包含註釋，詳細解釋了中國地名、歷史人物、故事和評論。", tags:["城市","歷史"], thumb:"thumb_IMG_20251207_100451.jpg", full:"IMG_20251207_100451.jpg"},
   {id:5, title:"「蜀本」", summary:"內容涉及中國古典文學評論和版本學", content:"主要討論了趙次公對杜甫詩歌的註解，並提到了一個「蜀本」版本，強調了其詳盡和價值。", tags:["山","海"], thumb:"thumb_IMG_20251207_100654.jpg", full:"IMG_20251207_100654.jpg"},
-  {id:6, title:"《新刊校定集注杜詩》殘卷", summary:"這是一本南宋寶慶乙酉（1225年）廣東漕司鏡板刊行的", content:`此為宋版書，極具歷史價值，是中國古代雕版印刷的高峰時期作品。
-圖片顯示的是卷二十七和卷二十八的部分內容。
-書中包含了杜甫的詩作以及多位學者的集注。`, tags:["山","城市"], thumb:"thumb_IMG_20251207_100658.jpg", full:"IMG_20251207_100658.jpg"}
-);
+  {id:6, title:"《新刊校定集注杜詩》殘卷", summary:"這是一本南宋寶慶乙酉（1225年）廣東漕司鏡板刊行的", content:`此為宋版書，極具歷史價值，是中國古代雕版印刷的高峰時期作品。圖片顯示的是卷二十七和卷二十八的部分內容。書中包含了杜甫的詩作以及多位學者的集注。`, tags:["山","城市"], thumb:"thumb_IMG_20251207_100658.jpg", full:"IMG_20251207_100658.jpg"}
+];
 
-// --- Render Posts with Thumbnails ---
-const postGrid=document.getElementById("postGrid");
-const searchInput=document.createElement("input");
-searchInput.placeholder="搜尋貼文...";
-document.getElementById("postContainer").prepend(searchInput);
-
-function renderPosts(){
-  const keyword=searchInput.value.toLowerCase();
-  const filtered=articles.filter(a=>a.title.toLowerCase().includes(keyword) || a.summary.toLowerCase().includes(keyword) || a.tags.some(t=>t.toLowerCase().includes(keyword)));
-  postGrid.innerHTML=filtered.map(a=>`
-    <div class="post-card" onclick="openPost(${a.id})">
-      <img src="${a.thumb}" loading="lazy" />
-      <h3>${a.title}</h3>
-      <p>${a.summary}</p>
-      <div class="tags">${a.tags.map(t=>`<span>${t}</span>`).join('')}</div>
-    </div>`).join("");
+// --- Render Posts as Clickable List ---
+const postList = document.getElementById("postList");
+function renderPostList() {
+  postList.innerHTML = articles.map(a => `
+    <li onclick="openPost(${a.id})">${a.title}</li>
+  `).join("");
 }
-searchInput.addEventListener("input",renderPosts);
-renderPosts();
+renderPostList();
 
-// --- Post Modal with Full Image ---
+// --- Post Modal ---
 const postModal=document.getElementById("postModal");
 function openPost(id){
   const post=articles.find(a=>a.id===id);
