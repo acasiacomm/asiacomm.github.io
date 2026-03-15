@@ -12,11 +12,11 @@ header {background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:5
 body.dark .card {background:#222;color:#eee;}
 .video-layout {display:flex;gap:20px;}
 @media(max-width:768px){.video-layout{flex-direction:column;}}
-.video-menu {width:280px;}
+.video-menu {width:280px; max-height: 450px; overflow-y: auto;}
 .video-item {padding:10px;cursor:pointer;border-radius:6px;margin-bottom:8px;}
 .video-item.active {background:#2575fc;color:white;font-weight:bold;}
 .video-player {flex:1;}
-.video-wrapper {position:relative;padding-bottom:56.25%;height:0;cursor:pointer;}
+.video-wrapper {position:relative;padding-bottom:56.25%;height:0;cursor:pointer;background: #000;border-radius: 8px;overflow: hidden;}
 .video-wrapper iframe {position:absolute;width:100%;height:100%;border:none;}
 .post-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px;}
 .post-card {background:#fff;border-radius:10px;padding:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);cursor:pointer;transition:0.2s;}
@@ -39,6 +39,7 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 #postModal .closeBtn {position:absolute;top:10px;right:20px;cursor:pointer;font-size:20px;}
 #postContainer input {width:100%;padding:8px 10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
 #darkModeBtn {position:fixed;top:20px;right:20px;padding:10px;border:none;border-radius:6px;cursor:pointer;z-index:10000;}
+footer {text-align: center; padding: 20px; color: #888;}
 </style>
 </head>
 <body>
@@ -99,7 +100,7 @@ body.dark #postModal .modal-content {background:#222;color:#eee;}
 // --- Articles Data ---
 const articles=[
   {id:1,title:"《大清聖祖仁皇帝實錄》",summary:"這是一部清朝官修的紀傳體史書，記錄了康熙皇帝（聖祖仁皇帝）在位期間的重要事件和諭旨。",content:`
-康熙三十六年（1697年）四月初九日（康熙三十六年四月初九日）及前後的一些記錄，內容涉及軍事報告、邊防事務、官員任免、教育選拔制度以及對已故官員的祭葬等皇家活動和國家政務。 
+康熙三十六年（1697年）四月初九日（康熙三十六年四月初九日）及前後的一些記錄，內容涉及軍事報告、邊防事務、官員任免、教育選拔制度以及對已故官員的祭葬等皇家活動 and 國家政務。 
 這部書是研究清代歷史，特別是康熙朝政治、社會、經濟和軍事等方面不可取代的重要史料。`,tags:["海","城市"],images:["100.jpg"]},
   {id:2,title:"奏報準葛爾丹生亡丹濟拉來降",summary:"這份奏報內容指的是清朝康熙年間平定準噶爾汗國首領噶爾丹叛亂的歷史事件。",content: `噶爾丹之死: 康熙帝曾三次親征噶爾丹。 康熙三十六年（1697年）四月，噶爾丹在眾叛親離的情況下病死（一說服毒自盡）。 
 丹濟拉投降: 丹濟拉是噶爾丹的侄子，原附牧於噶爾丹。 噶爾丹死後，丹濟拉焚燒了噶爾丹的遺骸，攜其女逃跑，並派人向清軍撫遠大將軍費揚古告降。 
@@ -151,7 +152,7 @@ articles.push(
 這件物品被展示在一個展示架上，暗示其重要性或博物館級別的地位。`,tags:["山","城市"],images:["IMG_20251207_100451.jpg"]}
 );
 
-    articles.push(
+  articles.push(
   {id:15,title:"蘇軾《赤壁賦》",summary:"內容描繪了蘇軾與友人在黃州赤壁夜遊泛舟的場景與感懷。 ",content:`
 作品為北宋文學家蘇軾所作。 
 內容描述壬戌年七月十六日，蘇子與客泛舟遊覽赤鼻磯的情景。 
@@ -188,17 +189,16 @@ function renderPosts(){
     </div>`).join("");
 
   // IntersectionObserver 懶加載
-  document.querySelectorAll('.post-card img').forEach(img=>{
-    const observer = new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          img.src = img.dataset.src;
-          observer.unobserve(img);
-        }
-      });
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const img = entry.target;
+        img.src = img.dataset.src;
+        observer.unobserve(img);
+      }
     });
-    observer.observe(img);
   });
+  document.querySelectorAll('.post-card img').forEach(img=>observer.observe(img));
 }
 
 searchInput.addEventListener("input",renderPosts);
@@ -233,32 +233,54 @@ darkBtn.onclick=()=>{
 if(localStorage.getItem("darkMode")==="1") document.body.classList.add("dark");
 
 // --- Video Player ---
-let player,currentIndex=0;
+let player, currentIndex=0;
 function onYouTubeIframeAPIReady(){
   player=new YT.Player('youtubePlayer',{
-    videoId:'c2ctgbsYoWE',
-    playerVars:{autoplay:1,mute:1,rel:0},
-    events:{onReady:()=>{setupVideoMenu();},onStateChange:(e)=>{if(e.data===YT.PlayerState.ENDED) playNext();}}
+    videoId:'c2ctgbsYoWE', // 初始影片 ID
+    playerVars:{
+      'autoplay': 0,    // 1. 設定為 0，開啟網頁不自動播放
+      'mute': 0,        // 2. 既然不自動播放，就不需要強制靜音
+      'rel': 0,
+      'modestbranding': 1
+    },
+    events:{
+      'onReady': setupVideoMenu,
+      'onStateChange': onPlayerStateChange
+    }
   });
+}
+
+function onPlayerStateChange(event) {
+  if(event.data === YT.PlayerState.ENDED) {
+    playNext();
+  }
 }
 
 function setupVideoMenu(){
   const videos=document.querySelectorAll(".video-item");
-  videos.forEach((item,index)=>item.addEventListener("click",()=>playVideo(index,true)));
+  videos.forEach((item,index)=> {
+    item.addEventListener("click",() => {
+      playVideo(index);
+    });
+  });
 }
 
-function playVideo(index,withSound=false){
+function playVideo(index){
   const videos=document.querySelectorAll(".video-item");
   currentIndex=index;
-  player.loadVideoById(videos[index].dataset.id);
-  withSound?player.unMute():player.mute();
+  const videoId = videos[index].dataset.id;
+  
+  // 切換影片並立即播放 (手動點選時播放)
+  player.loadVideoById(videoId);
+  
+  // 更新 UI 狀態
   videos.forEach(v=>v.classList.remove("active"));
   videos[index].classList.add("active");
 }
 
 function playNext(){
-  let next=currentIndex+1;
   const videos=document.querySelectorAll(".video-item");
+  let next=currentIndex+1;
   if(next>=videos.length) next=0;
   playVideo(next);
 }
@@ -266,7 +288,8 @@ function playNext(){
 // --- Load YouTube API ---
 const tag=document.createElement('script');
 tag.src="https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
+const firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 </script>
 
 </body>
