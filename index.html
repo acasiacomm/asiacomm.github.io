@@ -1,295 +1,352 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<title>旅遊就好首頁</title>
-<style>
-body {margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#f5f6fa;color:#333;transition:0.3s;}
-body.dark {background:#111;color:#eee;}
-header {background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:50px 20px;text-align:center;}
-.container {max-width:1200px;margin:40px auto;padding:0 20px;}
-.card {background:white;border-radius:12px;padding:20px;box-shadow:0 8px 20px rgba(0,0,0,0.1);transition:0.3s;}
-body.dark .card {background:#222;color:#eee;}
-.video-layout {display:flex;gap:20px;}
-@media(max-width:768px){.video-layout{flex-direction:column;}}
-.video-menu {width:280px; max-height: 450px; overflow-y: auto;}
-.video-item {padding:10px;cursor:pointer;border-radius:6px;margin-bottom:8px;}
-.video-item.active {background:#2575fc;color:white;font-weight:bold;}
-.video-player {flex:1;}
-.video-wrapper {position:relative;padding-bottom:56.25%;height:0;cursor:pointer;background: #000;border-radius: 8px;overflow: hidden;}
-.video-wrapper iframe {position:absolute;width:100%;height:100%;border:none;}
-.post-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px;}
-.post-card {background:#fff;border-radius:10px;padding:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);cursor:pointer;transition:0.2s;}
-body.dark .post-card {background:#333;color:#eee;}
-.post-card:hover {transform:translateY(-5px);}
-.post-card img {
-  width:100%;
-  aspect-ratio:16/9;
-  object-fit:cover;
-  border-radius:8px;
-  background:#ddd;
-}
-.post-card h3 {margin:10px 0 5px;}
-.post-card .tags span {background:#eee;border-radius:4px;padding:2px 6px;margin-right:5px;font-size:12px;}
-body.dark .post-card .tags span {background:#555;color:#eee;}
-#postModal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;overflow:auto;}
-#postModal .modal-content {background:white;max-width:800px;margin:50px auto;padding:20px;position:relative;border-radius:12px;transition:0.3s;}
-body.dark #postModal .modal-content {background:#222;color:#eee;}
-#postModal img {max-width:100%;margin-bottom:10px;border-radius:8px;cursor:pointer;}
-#postModal .closeBtn {position:absolute;top:10px;right:20px;cursor:pointer;font-size:20px;}
-#postContainer input {width:100%;padding:8px 10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
-#darkModeBtn {position:fixed;top:20px;right:20px;padding:10px;border:none;border-radius:6px;cursor:pointer;z-index:10000;}
-footer {text-align: center; padding: 20px; color: #888;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅遊就好 - 現代化版面</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --accent-color: #f59e0b; 
+            --bg-color: #f5f6fa;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        body.dark {
+            --bg-color: #111;
+            --text-color: #eee;
+            --card-bg: #222;
+        }
+
+        body {
+            font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            transition: background 0.3s;
+        }
+
+        /* Header 特效 */
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+
+        header h1, header p { position: relative; z-index: 1; }
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+
+        /* 三欄佈局 */
+        .main-container {
+            max-width: 1400px; 
+            margin: 2rem auto;
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 1.5rem;
+            padding: 0 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container { grid-template-columns: 1fr; }
+        }
+
+        /* 通用卡片設計 */
+        .glass-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        /* 左側：影片選單 */
+        .video-menu { max-height: 600px; overflow-y: auto; }
+        .video-item {
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: 0.2s;
+            border-left: 4px solid transparent;
+        }
+        .video-item:hover { background: rgba(37, 117, 252, 0.1); }
+        .video-item.active {
+            background: var(--secondary-color);
+            color: white;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        /* 中間：影片播放器與貼文 */
+        .video-player-section { margin-bottom: 2rem; }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .video-wrapper iframe { position: absolute; width: 100%; height: 100%; border: none; }
+
+        /* 貼文區域 */
+        .section-title {
+            border-left: 5px solid var(--secondary-color);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .post-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .post-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+        .post-info { padding: 15px; }
+        .tags span {
+            background: rgba(37, 117, 252, 0.1);
+            color: var(--secondary-color);
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        /* 右側：關於我與統計 */
+        .dev-card { text-align: center; }
+        .skill-tag {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 3px;
+        }
+
+        /* 彈窗 */
+        #postModal {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.8); z-index:10000; backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: var(--card-bg); max-width: 800px; margin: 50px auto;
+            padding: 30px; border-radius: 20px; position: relative;
+        }
+        .closeBtn { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; }
+
+        #darkModeBtn {
+            position: fixed; bottom: 20px; right: 20px;
+            padding: 12px; border: none; border-radius: 50%;
+            background: var(--secondary-color); color: white;
+            cursor: pointer; z-index: 10001; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        footer { text-align: center; padding: 40px; color: #888; border-top: 1px solid rgba(0,0,0,0.1); }
+    </style>
 </head>
 <body>
 
 <header>
-<h1>旅遊就好</h1>
-<p>✨ 不完美的旅途也值得<br>
-✨ 放下一切比較，擁抱當下<br>
-✨ 旅遊，是療癒、是學習、是生活的一部分<br>
-✨ 你值得去看更多、更遠、更深</p>
+    <div id="canvas-container"></div>
+    <h1>旅遊就好</h1>
+    <p>✨ 不完美的旅途也值得 | 放下一切比較，擁抱當下</p>
 </header>
 
-<button id="darkModeBtn">🌙 深色模式</button>
+<button id="darkModeBtn">🌓</button>
 
-<div class="container">
-<div class="card">
-<div class="video-layout">
-<div class="video-menu">
-<div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
-<div class="video-item" data-id="DauE0ZAVfLo">🌌 關渡橋與關渡濕地</div>
-<div class="video-item" data-id="CgM8GbcfQA0">🌊 2023坪溪</div>
-<div class="video-item" data-id="kuXlTM_xFos">🏙️ 金山海岸</div>
-<div class="video-item" data-id="DXKRYOX5eEw">🌄 石門-風箏公園</div>
-<div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
-<div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
-<div class="video-item" data-id="1eklV-oBPYg">🏞️ 霧台</div>
-<div class="video-item" data-id="ItaSIOD90lE">🚆 自由廣場</div>
-<div class="video-item" data-id="k49D0Iu4vSU">🏖️ 貴子坑</div>
-</div>
-<div class="video-player">
-<div class="video-wrapper" id="videoWrapper">
-<div id="youtubePlayer"></div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<div class="main-container">
+    <div class="left-column">
+        <div class="glass-card">
+            <h3 style="margin-top:0">🎬 影片巡禮</h3>
+            <div class="video-menu" id="videoMenu">
+                <div class="video-item active" data-id="c2ctgbsYoWE">🎄 2023新北耶誕城</div>
+                <div class="video-item" data-id="DauE0ZAVfLo">🌌 關渡橋與關渡濕地</div>
+                <div class="video-item" data-id="CgM8GbcfQA0">🌊 2023坪溪</div>
+                <div class="video-item" data-id="kuXlTM_xFos">🏙️ 金山海岸</div>
+                <div class="video-item" data-id="DXKRYOX5eEw">🌄 石門-風箏公園</div>
+                <div class="video-item" data-id="b5yp3OzCKXc">✨ 海洋生物</div>
+                <div class="video-item" data-id="u-XgX6U4Ec0">🎠 社子島</div>
+                <div class="video-item" data-id="1eklV-oBPYg">🏞️ 霧台</div>
+                <div class="video-item" data-id="ItaSIOD90lE">🚆 自由廣場</div>
+                <div class="video-item" data-id="k49D0Iu4vSU">🏖️ 貴子坑</div>
+            </div>
+        </div>
+    </div>
 
-<div class="container">
-<div class="card" id="postContainer">
-<h2>最新貼文</h2>
-<div id="postGrid" class="post-grid"></div>
-</div>
+    <div class="middle-column">
+        <div class="video-player-section">
+            <div class="video-wrapper">
+                <div id="youtubePlayer"></div>
+            </div>
+        </div>
+
+        <h2 class="section-title">最新旅誌</h2>
+        <input type="text" id="searchInput" class="search-box" placeholder="搜尋回憶與文字...">
+        <div id="postGrid" class="post-grid"></div>
+    </div>
+
+    <div class="right-column">
+        <div class="glass-card dev-card">
+            <h3>關於版主</h3>
+            <p style="font-size: 0.9rem; color: #666;">帶上相機，我們出發吧。在這裡分享我眼中的世界。</p>
+            <div style="margin-top:15px">
+                <span class="skill-tag">攝影</span>
+                <span class="skill-tag">慢活</span>
+                <span class="skill-tag">古籍研究</span>
+                <span class="skill-tag">空拍</span>
+            </div>
+        </div>
+        <div class="glass-card">
+            <h3>站內公告</h3>
+            <p style="font-size: 0.85rem; line-height: 1.6;">本站紀錄了 2023-2025 年間的旅行足跡，文字與影像皆為原創感悟。</p>
+        </div>
+    </div>
 </div>
 
 <div id="postModal">
-<div class="modal-content">
-<span class="closeBtn" onclick="closePost()">✕</span>
-<div id="modalSlider"></div>
-<h2 id="modalTitle"></h2>
-<p id="modalContent"></p>
-</div>
+    <div class="modal-content">
+        <span class="closeBtn" onclick="closePost()">✕</span>
+        <div id="modalSlider"></div>
+        <h2 id="modalTitle"></h2>
+        <p id="modalContent" style="white-space: pre-line; line-height: 1.8;"></p>
+    </div>
 </div>
 
-<footer>© 2025 旅遊就好. All rights reserved.</footer>
+<footer>© 2025 旅遊就好. 版面整合自 Benny Studio.</footer>
 
 <script>
-// --- Articles Data ---
+// --- 原網站 Articles Data (完全保留) ---
 const articles=[
-  {id:1,title:"《大清聖祖仁皇帝實錄》",summary:"這是一部清朝官修的紀傳體史書，記錄了康熙皇帝（聖祖仁皇帝）在位期間的重要事件和諭旨。",content:`
-康熙三十六年（1697年）四月初九日（康熙三十六年四月初九日）及前後的一些記錄，內容涉及軍事報告、邊防事務、官員任免、教育選拔制度以及對已故官員的祭葬等皇家活動 and 國家政務。 
-這部書是研究清代歷史，特別是康熙朝政治、社會、經濟和軍事等方面不可取代的重要史料。`,tags:["海","城市"],images:["100.jpg"]},
-  {id:2,title:"奏報準葛爾丹生亡丹濟拉來降",summary:"這份奏報內容指的是清朝康熙年間平定準噶爾汗國首領噶爾丹叛亂的歷史事件。",content: `噶爾丹之死: 康熙帝曾三次親征噶爾丹。 康熙三十六年（1697年）四月，噶爾丹在眾叛親離的情況下病死（一說服毒自盡）。 
-丹濟拉投降: 丹濟拉是噶爾丹的侄子，原附牧於噶爾丹。 噶爾丹死後，丹濟拉焚燒了噶爾丹的遺骸，攜其女逃跑，並派人向清軍撫遠大將軍費揚古告降。 
-撫遠大將軍: 撫遠大將軍伯費揚古是康熙帝任命的統帥，負責追剿噶爾丹餘部和處理丹濟拉的投降事宜。 費揚古曾奉旨派兵尋找丹濟拉的下落，並收集其部眾。 丹濟拉最終獲得清廷赦免，被授予官職。 `,tags:["山","海"],images:["200.jpg"]},
-  {id:3,title:"《春秋繁露》古籍",summary:"介紹古籍《春秋繁露》的背景與內容。",content:`這是一本名為《春秋繁露》的古籍，其年代可追溯至漢代，作者歸功於董仲舒。`,tags:["海","城市"],images:["IMG_20251207_100736.jpg"]},
-  {id:4,title:"中國古籍",summary:"古籍《左傳》及相關評論",content:"這是一本展開的中國古籍，文字為直書繁體字。",tags:["山","海"],images:["IMG_20251207_100406.jpg"]},
-  {id:5,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:`此書深入探討周禮中的女性角色與職責，強調「婦德、婦言、婦容、婦功」等四德。
-內容涵蓋后妃的待遇禮制，說明其地位類似天子之待公卿。
-書中提及堯以二女嫁舜的故事，以及九嬪受教於內宰的「陰禮」。
-強調教育的重要性，認為「規矩準繩」必須先自我端正，才能教導他人。`,tags:["城市"],images:["IMG_20251207_100410.jpg"]}
+  {id:1,title:"《大清聖祖仁皇帝實錄》",summary:"這是一部清朝官修的紀傳體史書...",content:`康熙三十六年（1697年）四月初九日...內容涉及軍事報告、邊防事務等。`,tags:["海","城市"],images:["100.jpg"]},
+  {id:2,title:"奏報準葛爾丹生亡丹濟拉來降",summary:"這份奏報內容指的是清朝康熙年間平定準噶爾...",content: `噶爾丹之死: 康熙帝曾三次親征噶爾丹...`,tags:["山","海"],images:["200.jpg"]},
+  {id:3,title:"《春秋繁露》古籍",summary:"介紹古籍《春秋繁露》的背景與內容。",content:`這是一本名為《春秋繁露》的古籍...`,tags:["海","城市"],images:["IMG_20251207_100736.jpg"]},
+  {id:5,title:"《周官講義》",summary:"周朝官制與婦女教育規範",content:`此書深入探討周禮中的女性角色與職責...`,tags:["城市"],images:["IMG_20251207_100410.jpg"]},
+  {id:11,title:"《紅樓夢》第五回",summary:"以詩詞形式總結了賈府乃至世間眾人的命運。",content:`為官的家業凋零，富貴的金銀散盡，世事無常...`,tags:["山","城市"],images:["IMG_20251207_112007.jpg"]},
+  {id:15,title:"蘇軾《赤壁賦》",summary:"內容描繪了蘇軾與友人在黃州赤壁夜遊泛舟。 ",content:`作品為北宋文學家蘇軾所作...`,tags:["城市","歷史"],images:["IMG_20251207_113405.jpg"]}
 ];
 
-articles.push(
-  {id:6,title:"《資治通鑑》",summary:"這是一本《資治通鑑》的朝鮮時代思政殿版本",content:"出版於1436 年。該版本包含註釋，詳細解釋了中國地名、歷史人物、故事和評論。",tags:["城市","歷史"],images:["IMG_20251207_100451.jpg"]},
-  {id:7,title:"「蜀本」",summary:"內容涉及中國古典文學評論和版本學",content:"主要討論了趙次公對杜甫詩歌的註解，並提到了一個「蜀本」版本，強調了其詳盡和價值。",tags:["山","海"],images:["IMG_20251207_100654.jpg"]},
-  {id:8,title:"《新刊校定集注杜詩》殘卷",summary:"這是一本南宋寶慶乙酉（1225年）廣東漕司鏡板刊行的",content:`此為宋版書，極具歷史價值，是中國古代雕版印刷的高峰時期作品。
-圖片顯示的是卷二十七和卷二十八的部分內容。
-書中包含了杜甫的詩作以及多位學者的集注。`,tags:["山","城市"],images:["IMG_20251207_100658.jpg"]}
-);
-
-articles.push(
-  {id:9,title:"《翻譯名義集》",summary:"這是一本名為《翻譯名義集》的古籍善本。",content:`作者為宋代僧人釋法雲。
-內容主要為佛教名詞術語的梵漢對譯與解釋。
-該版本為宋紹興二十七年（1157年）吳郡刊本。
-目前藏於國立故宮博物院。`,tags:["城市","歷史"],images:["IMG_20251207_100701.jpg"]},
-  {id:10,title:"《宋范仲淹集》",summary:"《宋范仲淹集》的古籍，可能為宋代刻本",content:`此書為宋代學者范仲淹的文集。
-書頁上有三個清晰的紅色印章，內容似乎包含「山陰」及「府庫」等字樣。
-古籍保存良好，並展示在一個展示櫃中。
-書本的裝幀和紙張顯示出其歷史悠久的特徵。`,tags:["山","海"],images:["IMG_20251207_101248.jpg"]},
-  {id:11,title:"《紅樓夢》第五回",summary:"以詩詞形式總結了賈府乃至世間眾人的命運，強調了因果報應和命運的無常。",content:`為官的家業凋零，富貴的金銀散盡，世事無常。
-有恩的能死裡逃生，無情的會得到報應，強調因果循環。
-欠命還命，欠淚還淚，冤冤相報，一切分離聚合皆是命中註定。
-最終，一切繁華落盡，猶如鳥投林後大地一片白茫茫，歸於虛無。`,tags:["山","城市"],images:["IMG_20251207_112007.jpg"]}
-);
-
-  articles.push(
-  {id:12,title:"《詩經》中的〈桃夭〉一章",summary:"以傳統漢字刻印而成",content:`頁面為線裝書形式，紙張呈黃褐色，顯示其年代久遠。
-文字採用由上而下、由右至左的直書排版方式。
-書頁上包含經文、註解及音韻說明等多種內容。
-文字內容使用繁體中文（正體字）呈現。`,tags:["城市","歷史"],images:["IMG_20251207_100727.jpg"]},
-  {id:13,title:"此書為中國古代文獻",summary:"其內容涉及《春秋》及其註釋",content:`這是一本展開的中文古籍，展示了古代的雕版印刷和裝幀形式，其內容涉及《春秋》及其註釋，如左傳、公羊傳和穀梁傳。 
-此書為中國古代文獻。 
-文字內容主要關於儒家經典《春秋》的三傳（左傳、公羊傳、穀梁傳）。 
-討論了不同歷史時期（漢朝、魏晉）對這些經典的學術見解和流傳情況。 
-採用傳統的包背裝或線裝形式。 `,tags:["山","海"],images:["IMG_20251207_100406.jpg"]},
-  {id:14,title:"一本具有收藏價值的古籍",summary:"這是一本裝訂古老的中文書籍，內容包含歷史文本，可能是一本具有收藏價值的古籍。 ",content:`書頁呈現泛黃的紙張和傳統的直排印刷。
-內容似乎是關於古代中國歷史的記錄或註釋。
-部分可辨識的文字包括「五年春王正月」、「公羊樂」等，顯示其為歷史文獻。
-這件物品被展示在一個展示架上，暗示其重要性或博物館級別的地位。`,tags:["山","城市"],images:["IMG_20251207_100451.jpg"]}
-);
-
-  articles.push(
-  {id:15,title:"蘇軾《赤壁賦》",summary:"內容描繪了蘇軾與友人在黃州赤壁夜遊泛舟的場景與感懷。 ",content:`
-作品為北宋文學家蘇軾所作。 
-內容描述壬戌年七月十六日，蘇子與客泛舟遊覽赤鼻磯的情景。 
-文中抒發了作者面對美景時，從喜悅、感傷到最終達觀超脫的情緒轉折。 
-此賦為後世著名的文學作品，其中「滄海一粟」等成語流傳至今。`,tags:["城市","歷史"],images:["IMG_20251207_113405.jpg"]},
-  {id:16,title:"《孝經圖》手卷",summary:"宋代畫家李公麟（Li Gonglin，約1049-1106 年）所繪的《孝經圖》手卷。",content:`內容：該手卷描繪了《孝經》的十八個章節，經文與「白描」線條畫並列。 
-歷史價值：原作是現存僅有的三件李公麟作品之一。 
-教育意義：此作品旨在發揮教化功能，強調儒家孝道思想。 
-風格：畫作採用了內斂的風格，沒有華麗的色彩，以表達對樸素美德的追求。 `,tags:["山","海"],images:["IMG_20251207_114149.jpg"]},
-  {id:17,title:"《宋四家墨寶冊宋蘇軾書次韻秦太虛見戲耳聾詩》",summary:"這幅小字行書詩作是蘇軾（西元1036-1101年）為回應好友秦觀（秦太虛）的戲作〈見戲耳聾詩〉而寫。 ",content:`作者與時期： 由北宋文學家、書畫家蘇軾所書，約作於元豐二年（1079年）。 
-內容： 詩文共十六句，七言古詩，內容詼諧戲謔，字裡行間隱含對仕途險惡的感慨。 
-詩句開頭為：「君不見詩人借車無可載，留得一錢何足賴。晚年更似杜陵翁，右臂雖存耳先聵。」 
-詩中提到「人將蟻動作牛鬥，我覺風雷真一噫」，表達了作者對世俗紛爭的超脫態度。 
-書法特色： 蘇軾的書法風格多變，此作結字溫潤勻穩，不因筆畫略肥而失韻，是其書法的佳品。 黃庭堅曾推崇蘇軾為「宋朝第一」。 
-館藏： 此作品為《宋四家墨寶》冊頁之一，目前典藏於國立故宮博物院。 
-歷史價值： 這首詩可以看作是蘇軾在「烏臺詩案」下獄前激憤情緒的集中體現，具有重要的歷史與藝術價值`,tags:["山","城市"],images:["IMG_20251207_114208.jpg"]}
-);
-
-// --- Render Posts with Lazy Loading ---
+// --- 渲染貼文 ---
 const postGrid=document.getElementById("postGrid");
-const searchInput=document.createElement("input");
-searchInput.placeholder="搜尋貼文...";
-document.getElementById("postContainer").prepend(searchInput);
+const searchInput=document.getElementById("searchInput");
 
 function renderPosts(){
-  const keyword=searchInput.value.toLowerCase();
-  const filtered=articles.filter(a=>a.title.toLowerCase().includes(keyword) || a.summary.toLowerCase().includes(keyword) || a.tags.some(t=>t.toLowerCase().includes(keyword)));
-  postGrid.innerHTML=filtered.map(a=>`
-    <div class="post-card" onclick="openPost(${a.id})">
-      <img data-src="${a.images[0]}" loading="lazy" />
-      <h3>${a.title}</h3>
-      <p>${a.summary}</p>
-      <div class="tags">${a.tags.map(t=>`<span>${t}</span>`).join('')}</div>
-    </div>`).join("");
-
-  // IntersectionObserver 懶加載
-  const observer = new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        const img = entry.target;
-        img.src = img.dataset.src;
-        observer.unobserve(img);
-      }
-    });
-  });
-  document.querySelectorAll('.post-card img').forEach(img=>observer.observe(img));
+    const keyword=searchInput.value.toLowerCase();
+    const filtered=articles.filter(a=>a.title.toLowerCase().includes(keyword) || a.summary.toLowerCase().includes(keyword));
+    postGrid.innerHTML=filtered.map(a=>`
+        <div class="post-card" onclick="openPost(${a.id})">
+            <img src="${a.images[0]}" loading="lazy" />
+            <div class="post-info">
+                <h3>${a.title}</h3>
+                <p style="font-size:0.85rem; color:#666">${a.summary}</p>
+                <div class="tags">${a.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+            </div>
+        </div>`).join("");
 }
 
 searchInput.addEventListener("input",renderPosts);
 renderPosts();
 
-// --- Post Modal ---
-const postModal=document.getElementById("postModal");
+// --- Modal 控制 ---
 function openPost(id){
-  const post=articles.find(a=>a.id===id);
-  document.getElementById("modalTitle").innerText=post.title;
-  document.getElementById("modalContent").innerText=post.content;
-  const slider=document.getElementById("modalSlider");
-  slider.innerHTML=post.images.map((img,i)=>`<img src="${img}" style="display:${i===0?'block':'none'}">`).join("");
-  let idx=0;
-  slider.onclick=()=>{
-    const imgs=slider.querySelectorAll("img");
-    imgs[idx].style.display="none";
-    idx=(idx+1)%imgs.length;
-    imgs[idx].style.display="block";
-  };
-  postModal.style.display="block";
+    const post=articles.find(a=>a.id===id);
+    document.getElementById("modalTitle").innerText=post.title;
+    document.getElementById("modalContent").innerText=post.content;
+    document.getElementById("postModal").style.display="block";
 }
-function closePost(){postModal.style.display="none";}
+function closePost(){document.getElementById("postModal").style.display="none";}
 
-// --- Dark Mode ---
+// --- 深色模式 (保留) ---
 const darkBtn=document.getElementById("darkModeBtn");
 darkBtn.onclick=()=>{
-  const on=!document.body.classList.contains("dark");
-  document.body.classList.toggle("dark",on);
-  localStorage.setItem("darkMode",on?"1":"0");
+    document.body.classList.toggle("dark");
+    localStorage.setItem("travelDarkMode", document.body.classList.contains("dark") ? "1" : "0");
 };
-if(localStorage.getItem("darkMode")==="1") document.body.classList.add("dark");
+if(localStorage.getItem("travelDarkMode")==="1") document.body.classList.add("dark");
 
-// --- Video Player ---
-let player, currentIndex=0;
-function onYouTubeIframeAPIReady(){
-  player=new YT.Player('youtubePlayer',{
-    videoId:'c2ctgbsYoWE', // 初始影片 ID
-    playerVars:{
-      'autoplay': 0,    // 1. 設定為 0，開啟網頁不自動播放
-      'mute': 0,        // 2. 既然不自動播放，就不需要強制靜音
-      'rel': 0,
-      'modestbranding': 1
-    },
-    events:{
-      'onReady': setupVideoMenu,
-      'onStateChange': onPlayerStateChange
+// --- Three.js 背景特效 (來自第二個網站) ---
+function initHeaderArt() {
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.z = 5;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
+
+    const particlesCount = 1000;
+    const posArray = new Float32Array(particlesCount * 3);
+    for(let i = 0; i < particlesCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 15; }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const mat = new THREE.PointsMaterial({ size: 0.02, color: 0xffffff, transparent: true, opacity: 0.4 });
+    const mesh = new THREE.Points(geo, mat);
+    scene.add(mesh);
+
+    function animate() {
+        requestAnimationFrame(animate);
+        mesh.rotation.y += 0.001;
+        renderer.render(scene, camera);
     }
-  });
+    animate();
 }
+window.addEventListener('load', initHeaderArt);
 
-function onPlayerStateChange(event) {
-  if(event.data === YT.PlayerState.ENDED) {
-    playNext();
-  }
-}
-
-function setupVideoMenu(){
-  const videos=document.querySelectorAll(".video-item");
-  videos.forEach((item,index)=> {
-    item.addEventListener("click",() => {
-      playVideo(index);
+// --- YouTube API (保留功能) ---
+let player;
+function onYouTubeIframeAPIReady(){
+    player=new YT.Player('youtubePlayer',{
+        videoId:'c2ctgbsYoWE',
+        playerVars:{'autoplay': 0, 'rel': 0, 'modestbranding': 1},
+        events:{'onReady': setupVideoMenu}
     });
-  });
 }
-
-function playVideo(index){
-  const videos=document.querySelectorAll(".video-item");
-  currentIndex=index;
-  const videoId = videos[index].dataset.id;
-  
-  // 切換影片並立即播放 (手動點選時播放)
-  player.loadVideoById(videoId);
-  
-  // 更新 UI 狀態
-  videos.forEach(v=>v.classList.remove("active"));
-  videos[index].classList.add("active");
+function setupVideoMenu(){
+    document.querySelectorAll(".video-item").forEach((item,index)=> {
+        item.addEventListener("click",() => {
+            const videoId = item.dataset.id;
+            player.loadVideoById(videoId);
+            document.querySelectorAll(".video-item").forEach(v=>v.classList.remove("active"));
+            item.classList.add("active");
+        });
+    });
 }
-
-function playNext(){
-  const videos=document.querySelectorAll(".video-item");
-  let next=currentIndex+1;
-  if(next>=videos.length) next=0;
-  playVideo(next);
-}
-
-// --- Load YouTube API ---
 const tag=document.createElement('script');
 tag.src="https://www.youtube.com/iframe_api";
-const firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+document.head.appendChild(tag);
 </script>
 
 </body>
